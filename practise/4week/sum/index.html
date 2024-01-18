@@ -1,0 +1,37 @@
+<html>
+    <script>
+        let timeout;
+        function delayPopulateDiv(){
+            clearTimeout(timeout)
+            timeout = setTimeout(function(){
+                populateDiv()
+            },1000)
+        }
+        function populateDiv(){
+            const element = document.getElementById("finalSum")
+            const a = document.getElementById("firstNumber").value 
+            const b = document.getElementById("secondNumber").value 
+            // const result = parseInt(a)+parseInt(b)
+            // element.innerHTML = result
+            //trying to hit the backend server with the logic and getting back the result
+            fetch("https://sum-server.100xdevs.com/sum?a=" + a + "&b=" + b)
+                .then(function(response){
+                    response.text()
+                        .then(function(ans){
+                            document.getElementById("finalSum").innerHTML = ans
+                        })
+                })
+
+        }
+    </script>
+    <body>
+        <!-- oninput = "populateDiv()" -->
+        <!-- <input id="firstNumber" type="text" placeholder="First Number"> <br> <br>
+        <input id="secondNumber" type="text" placeholder="Second Number" name="" id=""> <br> <br> -->
+        <!-- <button onclick="populateDiv()" >Calculate Sum</button> <br> <br> -->
+        <!-- debouncing -->
+        <input oninput="delayPopulateDiv()" id="firstNumber" type="text" placeholder="First Number"> <br> <br>
+        <input oninput="delayPopulateDiv()" id="secondNumber" type="text" placeholder="Second Number"> <br> <br>
+        <div id="finalSum"></div>
+    </body>
+</html>
