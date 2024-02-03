@@ -1,35 +1,39 @@
+import { useEffect } from 'react'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/*
+Hooks : The functions that start with Use are called Hooks.
+Hooks in react are functions that allow you to hook into react state and lifecycle features from funtion components.
 
+Now to understand useEffect hook we will be creating an app that polls the sum server, gets the current set of TODOs and renders it on screen.
+*/
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos,setTodos] = useState([])
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  useEffect(()=>{
+    setInterval(()=>{
+      fetch("https://sum-server.100xdevs.com/todos")
+        .then(async (res)=>{
+          const data = await res.json()
+        setTodos(data.todos)
+      })
+    },1000)
+  },[])
+
+  return <div>
+      {todos.map(todo=> <Todo key={todo.id} todoTitle={todo.title} todoDescription={todo.description}/>)}
+    </div>
+
+}
+
+function Todo({todoTitle,todoDescription}){
+  return <div>
+    <h1>
+      {todoTitle}
+    </h1>
+    <h3>
+      {todoDescription}
+    </h3>
+  </div>
 }
 
 export default App
