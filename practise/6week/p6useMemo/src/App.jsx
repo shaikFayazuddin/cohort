@@ -1,28 +1,53 @@
+/*
+Demo of useMemo
+*/
+/*the issue is whenever the button component is re-rendered, it also re-renders the full app component which means, the for loop will run again , which is expenseive operation, to avoid this first we used the useEffect and then useMemo*/
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { useEffect } from 'react'
+import { useMemo } from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [counter, setCounter] = useState(0)
+  const [inputvalue, setInputValue] = useState(1)
+  //const [finalsum, setFinalSum] = useState()
+ 
+  /*
+  //this will cause unnecessary re-renders and to avoid this we use useMemo whose syntac is very close to useEffect
+
+  useEffect(()=>{
+    let sum = 0
+  for(let i=1;i<=inputvalue;i++){
+    sum = sum+i
+  }
+  setFinalSum(sum)
+  },[inputvalue])
+
+  */
+
+  let finalSum = useMemo(()=>{
+    let sum = 0
+    for(let i=1;i<=inputvalue;i++){
+      sum = sum+i
+    }
+    return sum
+  },[inputvalue])
+
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo"tCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        <input type="text" onChange={(e)=>{
+          setInputValue(e.target.value)
+        }}  placeholder='Find sum from 1 to n'/> <br />
+
+        <div>Sum from 1 to {inputvalue} is {finalSum}</div> <br />
+
+        <button onClick={()=>{
+          setCounter(counter+1)
+        }}>Counter {counter}</button>
+
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
