@@ -6,7 +6,6 @@ import { RecoilRoot, useRecoilValue } from 'recoil'
 import { jobsAtom, networkAtom,notificationAtom, messageAtom } from './atom'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
