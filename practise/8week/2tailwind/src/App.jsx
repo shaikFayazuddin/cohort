@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { RevenueCard } from './components/RevenueCard'
 
 function App() {
   return (
@@ -22,6 +23,10 @@ function App() {
         <div className='bg-blue-600 col-span-9 md:col-span-3'>and</div>
         <div className='bg-blue-300 col-span-9 md:col-span-3'>Discipline</div>
       </div>
+      <div className='grid grid-cols-4'>
+        <RevenueCard title={"Amount Pending"} amount={"9,87,65,432"} orderCount={6}></RevenueCard>
+      </div>
+      
     </>
   )
 }
