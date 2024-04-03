@@ -41,3 +41,29 @@ function afterOneSecond(){
 
 
 mainFunction(afterOneSecond)
+
+/////interface- setting type for object
+
+const user = {
+    firstName : "Fayazuddin",
+    lastName : "Shaik",
+    age : 24
+}
+
+interface User{
+    firstName : string,
+    lastName : string,
+    age : number,
+    email ?: string
+}
+
+function isAdult(user : User){
+    if(user.age > 18){
+        return true
+    }else{
+        return false
+    }
+}
+
+const result = isAdult(user)
+console.log(result)
