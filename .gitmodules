@@ -1,0 +1,6 @@
+[submodule "practise/10week/practise/10week/1todoSQL"]
+	path = practise/10week/practise/10week/1todoSQL
+	url = https://github.com/100xDevs-hkirat/week-13-sql.git
+[submodule "practise/10week/week-13-sql"]
+	path = practise/10week/week-13-sql
+	url = https://github.com/100xDevs-hkirat/week-13-sql.git
