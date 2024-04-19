@@ -17,7 +17,7 @@ async function createUsersTable(){
     )`)
     console.log(result)
 }
-createUsersTable()
+// createUsersTable()
 
 async function createAddressTable() {
     const result = await client.query(`
@@ -32,7 +32,7 @@ async function createAddressTable() {
         )`)
         console.log(result) 
 }
-createAddressTable()
+// createAddressTable()
 
 /*
 async function insertData(){
@@ -86,7 +86,7 @@ async function getUser(email:string) {
         await client.end()
     }
 }
-getUser('user@gmail.com').catch(console.error)
+// getUser('user@gmail.com').catch(console.error)
 
 //now writing logic to add both the student and address data in a single request and this requrires transaction to make sure either all the data goes or nothing
 
@@ -99,6 +99,7 @@ async function insertStudentAndAddress(
     pincode : string
 ){
     try{
+        await client.connect()
         await client.query('BEGIN')
 
         const studentData = `INSERT INTO students(username, email, password) 
@@ -126,7 +127,7 @@ async function insertStudentAndAddress(
         await client.end()
     }
 }
-
+/*
 insertStudentAndAddress(
     'user6',
     'user6@gmail.com',
@@ -135,3 +136,50 @@ insertStudentAndAddress(
     'india',
     '520001'
 )
+*/
+
+
+
+//now the concept to learn in JOIN
+
+/*
+for suppose if the data from the one table and the data from other table need to be stitched and pass it as output...for this scenario we can fetch data from first table in a request and data from second table in another reqeusst.
+this works but not recomened as it can lead to errors.
+>to avoid this we use joins.
+>demo of the both the methods
+
+*/
+
+async function getStudentDetailsAndAddressSeparately(userId : string) {
+
+    try{
+        await client.connect()
+        const studentDetailsQuery = 'SELECT id, username,email FROM students WHERE id=$1'
+        const studentValues = [userId]
+        const studentDetailRes = await client.query(studentDetailsQuery,studentValues)
+
+        const studentAddressQuery = 'SELECT city,country,pincode FROM address WHERE user_id = $1'
+        const studentAddressRes = await client.query(studentAddressQuery,studentValues)
+
+        if(studentDetailRes.rows.length>0){
+            console.log("Studnet found :", studentDetailRes.rows[0])
+            console.log("Address:",studentAddressRes.rows.length>0 ? studentAddressRes.rows[0] : "No address Found")
+            return {student : studentDetailRes.rows[0],
+                address : studentAddressRes.rows.length>0 ? studentAddressRes.rows[0] : null
+            }
+        }else{
+            console.log("No user found with the given ID")
+            return null
+        }
+    }catch(err){
+        console.log("Error during fetching user and address : ", err)
+        throw err
+    }finally{
+        await client.end()
+    }  
+}
+
+getStudentDetailsAndAddressSeparately("6")
+
+
+//now using joins

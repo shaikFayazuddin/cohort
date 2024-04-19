@@ -27,7 +27,7 @@ function createUsersTable() {
         console.log(result);
     });
 }
-createUsersTable();
+// createUsersTable()
 function createAddressTable() {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield client.query(`
@@ -43,7 +43,7 @@ function createAddressTable() {
         console.log(result);
     });
 }
-createAddressTable();
+// createAddressTable()
 /*
 async function insertData(){
     // await client.connect()
@@ -99,11 +99,12 @@ function getUser(email) {
         }
     });
 }
-getUser('user@gmail.com').catch(console.error);
+// getUser('user@gmail.com').catch(console.error)
 //now writing logic to add both the student and address data in a single request and this requrires transaction to make sure either all the data goes or nothing
 function insertStudentAndAddress(username, email, password, city, country, pincode) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            yield client.connect();
             yield client.query('BEGIN');
             const studentData = `INSERT INTO students(username, email, password) 
         VALUES ($1, $2, $3)
@@ -130,4 +131,53 @@ function insertStudentAndAddress(username, email, password, city, country, pinco
         }
     });
 }
-insertStudentAndAddress('user6', 'user6@gmail.com', 'user6Password', 'delhi', 'india', '520001');
+/*
+insertStudentAndAddress(
+    'user6',
+    'user6@gmail.com',
+    'user6Password',
+    'delhi',
+    'india',
+    '520001'
+)
+*/
+//now the concept to learn in JOIN
+/*
+for suppose if the data from the one table and the data from other table need to be stitched and pass it as output...for this scenario we can fetch data from first table in a request and data from second table in another reqeusst.
+this works but not recomened as it can lead to errors.
+>to avoid this we use joins.
+>demo of the both the methods
+
+*/
+function getStudentDetailsAndAddressSeparately(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield client.connect();
+            const studentDetailsQuery = 'SELECT id, username,email FROM students WHERE id=$1';
+            const studentValues = [userId];
+            const studentDetailRes = yield client.query(studentDetailsQuery, studentValues);
+            const studentAddressQuery = 'SELECT city,country,pincode FROM address WHERE user_id = $1';
+            const studentAddressRes = yield client.query(studentAddressQuery, studentValues);
+            if (studentDetailRes.rows.length > 0) {
+                console.log("Studnet found :", studentDetailRes.rows[0]);
+                console.log("Address:", studentAddressRes.rows.length > 0 ? studentAddressRes.rows[0] : "No address Found");
+                return { student: studentDetailRes.rows[0],
+                    address: studentAddressRes.rows.length > 0 ? studentAddressRes.rows[0] : null
+                };
+            }
+            else {
+                console.log("No user found with the given ID");
+                return null;
+            }
+        }
+        catch (err) {
+            console.log("Error during fetching user and address : ", err);
+            throw err;
+        }
+        finally {
+            yield client.end();
+        }
+    });
+}
+const data = getStudentDetailsAndAddressSeparately("6");
+console.log(data);
