@@ -17,10 +17,24 @@ async function createUsersTable(){
     )`)
     console.log(result)
 }
-
 createUsersTable()
 
+async function createAddressTable() {
+    const result = await client.query(`
+        CREATE TABLE address(
+            id  SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            city VARCHAR(50) NOT NULL,
+            country VARCHAR(50) NOT NULL,
+            pincode VARCHAR(50) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES students(id) ON DELETE CASCADE
+        )`)
+        console.log(result) 
+}
+createAddressTable()
 
+/*
 async function insertData(){
     // await client.connect()
     const insertQuery = `INSERT INTO students(username, email, password)
@@ -30,5 +44,94 @@ async function insertData(){
     console.log('Insertion Success:',res)
     await client.end()
 }
-
 insertData()
+*/
+
+//this is to create a new user
+/*
+async function insertData(username:string,email:string,password:string){
+    // await client.connect()
+    try{
+        const insertQuery = "INSERT INTO students(username, email, password) VALUES ($1,$2,$3)"
+        const values = [username, email, password]
+        const res = await client.query(insertQuery,values)
+        console.log("Insertion success:", res)
+    } catch(err){
+        console.log("Insertion failed:", err)
+    }finally{
+        await client.end()
+    }
+}
+
+insertData('user5','user5@gmail.com', 'hellouser').catch(console.error)
+*/
+
+//to read data from db
+async function getUser(email:string) {
+    try{
+    const query = 'SELECT * FROM students WHERE email = $1'
+    const values = [email]
+    const res = await client.query(query,values)
+    
+    if(res.rows.length>0){
+        console.log("User Found:", res.rows[0])
+        return res.rows[0]
+    }else{
+        console.log("No user found with the given email")
+        return null
+    }}catch(err){
+        console.log("Error during fetching data",err)
+        throw err
+    }finally{
+        await client.end()
+    }
+}
+getUser('user@gmail.com').catch(console.error)
+
+//now writing logic to add both the student and address data in a single request and this requrires transaction to make sure either all the data goes or nothing
+
+async function insertStudentAndAddress(
+    username : string,
+    email : string,
+    password : string,
+    city : string,
+    country : string,
+    pincode : string
+){
+    try{
+        await client.query('BEGIN')
+
+        const studentData = `INSERT INTO students(username, email, password) 
+        VALUES ($1, $2, $3)
+        RETURNING id`
+        const studentValues = [username, email, password]
+        const userRes = await client.query(studentData,studentValues)
+        const userId = userRes.rows[0].id
+        console.log("Student data added",userRes)
+
+        const addressData = `INSERT INTO address(user_id, city, country, pincode)
+        VALUES ($1, $2, $3, $4)`
+        const addressValues = [userId,city,country,pincode]
+        const addressRes = await client.query(addressData,addressValues)
+        console.log("Address added", addressRes)
+
+        await client.query("COMMIT")
+
+        console.log("User and Address added successfully")
+    }catch(err){
+        await client.query("ROLLBACK")
+        console.log("Error during insertion, rolled back", err)
+        throw err
+    }finally{
+        await client.end()
+    }
+}
+
+insertStudentAndAddress(
+    'user6',
+    'user6@gmail.com',
+    'user6Password',
+    'delhi',
+    'india',
+    '520001'
+)
