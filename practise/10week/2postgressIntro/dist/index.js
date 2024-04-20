@@ -179,5 +179,34 @@ function getStudentDetailsAndAddressSeparately(userId) {
         }
     });
 }
-const data = getStudentDetailsAndAddressSeparately("6");
-console.log(data);
+// getStudentDetailsAndAddressSeparately("6")
+//now using joins
+function getStudentAndAddressData(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield client.connect();
+            const query = `SELECT s.id, s.username, s.email, a.city, a.country, a.pincode
+        FROM students s
+        JOIN address a on s.id = a.user_id
+        WHERE s.id = $1`;
+            const value = [userId];
+            const res = yield client.query(query, value);
+            if (res.rows.length > 0) {
+                console.log("Student and Address found : ", res.rows[0]);
+                return res.rows[0];
+            }
+            else {
+                console.log("No user and address found with give ID");
+                return null;
+            }
+        }
+        catch (err) {
+            console.log("Error during fetching data : ", err);
+            throw err;
+        }
+        finally {
+            yield client.end();
+        }
+    });
+}
+getStudentAndAddressData("6");
