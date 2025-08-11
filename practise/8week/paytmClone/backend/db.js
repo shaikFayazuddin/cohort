@@ -1,6 +1,11 @@
 const mongoose = require("mongoose")
+const dotenv = require("dotenv")
+dotenv.config();
 const { minLength, maxLength, number } = require("zod")
-mongoose.connect("mongodb+srv://100xDevFayaz:fayazuddin@cluster0.x82q5ks.mongodb.net/")
+const dbUrl = process.env.DB_URL
+
+mongoose.connect(dbUrl)
+//mongoose.connect("mongodb+srv://100xDevFayaz:fayazuddin@cluster0.x82q5ks.mongodb.net/")
 
 const userSchema = new mongoose.Schema({
 
