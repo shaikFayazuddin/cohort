@@ -26,7 +26,8 @@ const updateDataCheck = zod.object({
     updated_firstName_check : zod.string().min(3).optional(),
     updated_lastName_check : zod.string().min(3).optional()
 })
-router.get("/signin", async (req, res)=>{
+
+router.post("/signin", async (req, res)=>{
   const result = signinCheck.safeParse(req.body)
 
   if(!result){
@@ -39,13 +40,15 @@ router.get("/signin", async (req, res)=>{
     userName : req.body.userName
   })
 
+  console.log(isUserExists)
+
   if(!isUserExists){
     return res.status(400).json({
       msg : "Can't find username, try to signup"
     })
   }
 
-  const token = jwt.sign({userId : isUserExists.userId}, JWT_SECRET)
+  const token = jwt.sign({userId : isUserExists._id}, JWT_SECRET)
 
   res.json({
     token : token
