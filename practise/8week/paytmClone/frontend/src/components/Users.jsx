@@ -4,38 +4,45 @@ import { InputBox } from "./InputBox";
 import { useEffect } from "react";
 import { DB_URL } from "../config";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export function Users({}){
 
-  const [users, setUsers] = useState([])
+  const [paytmUsers, setPaytmUsers] = useState([])
   const [filter, setFilter] = useState("")
 
-  useEffect(()=>{
-    axios.get(`${DB_URL}/api/v1/user/bulk?filter=${filter}`).then(response=>setUsers(response.data.users))
-  },[filter])
+  // useEffect(()=>{
+  //   axios.get(`${DB_URL}/api/v1/user/bulk?filter=${filter}`).then(response=>setUsers(response.data.users))
+  // },[filter])
 
+  useEffect(() => {
+        axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+            .then(response => {
+                setPaytmUsers(response.data.users)
+            })
+    }, [filter])
+  console.log("the fetched users are", paytmUsers)
   return <div>
     <InputBox onChange={e=>setFilter(e.target.value)} inputLabel={"Users"} inputPlaceholder={"Search Users"} inputType={"text"}></InputBox>
 
     <div>
-      {users.map(user=><User user={user}/>)}
+      {paytmUsers.length>0 ? paytmUsers.map(user=><SingleUser key={user._id} user={user}/>) : null }
     </div>
     
     
   </div>
 }
 
-function User({user}){
-  
-  const handleClick = ()=>{
-    console.log("user trying to send money")
-  }
+function SingleUser({user}){
+  const navigate = useNavigate()
   return <div>
 
     <div>
       {user.firstName} {user.lastName}
     </div>
 
-    <Button buttonName={"Send Money"} onClick={handleClick}></Button>
+    <Button buttonName={"Send Money"} onClick={(e)=>{
+      navigate(`/send?id=${user._id}&name=${user.firstName}`)
+    }}></Button>
   </div>
 }
