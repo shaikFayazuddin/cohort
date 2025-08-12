@@ -37,10 +37,11 @@ router.post("/signin", async (req, res)=>{
   }
 
   const isUserExists = await PaytmUsers.findOne({
-    userName : req.body.userName
+    userName : req.body.userName,
+    password : req.body.password
   })
 
-  console.log(isUserExists)
+  // console.log(isUserExists)
 
   if(!isUserExists){
     return res.status(400).json({
@@ -68,8 +69,6 @@ router.post("/signup", async (req,res)=>{
     return res.status(411).json({
       msg : 'Invalid Inputs/User already exits'
     })
-  }else{
-    console.log(result.data)
   }
 
   const existingUser = await PaytmUsers.findOne({
@@ -91,7 +90,7 @@ router.post("/signup", async (req,res)=>{
   })
   
   const randomBalance = Math.floor(Math.random()*10000) + 1
-  console.log("the random balance is", randomBalance)
+  // console.log("the random balance is", randomBalance)
   
   
   const userId = user._id
@@ -100,7 +99,7 @@ router.post("/signup", async (req,res)=>{
     userId : userId,
     balance : randomBalance
   })
-  console.log("the balance is", balance)
+  // console.log("the balance is", balance)
 
   const token = jwt.sign({
     userId : userId
@@ -135,7 +134,7 @@ router.put("/", authMiddleware, async (req, res)=>{
 
 router.get("/bulk",  async (req,res)=>{
   const filter = req.query.filter || ""
-  console.log("the filter is", filter)
+  // console.log("the filter is", filter)
 
   const filteredUsers = await PaytmUsers.find({
     $or : [
@@ -145,7 +144,7 @@ router.get("/bulk",  async (req,res)=>{
   })
   const finalFilteredUsers = filteredUsers.map(({_id, userName, firstName, lastName})=>({_id,userName, firstName, lastName}))
 
-  console.log("all filtered resultes are", filteredUsers)
+  // console.log("all filtered resultes are", filteredUsers)
   res.status(200).json({
     users : finalFilteredUsers
   })

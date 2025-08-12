@@ -10,6 +10,7 @@ app.use("/api/v1", router)
 
 
 app.listen(3000, ()=>{
-  console.log("Paytm backend server is up and running on PORT:"+PORT)
-  console.log(`http://localhost:${PORT}`)
+  // console.log("Paytm backend server is up and running on PORT:"+PORT)
+  // console.log(`http://localhost:${PORT}`)
+  return `Server is up and running`
 })

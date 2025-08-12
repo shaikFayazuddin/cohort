@@ -8,17 +8,20 @@ import axios from "axios";
 export function SendMoney(){
 
   const [searchParams] = useSearchParams()
-  const toUserId = searchParams.id 
-  const toUserName = searchParams.name
+  const toUserId = searchParams.get("id") 
+  const toUserName = searchParams.get("name")
   const [amount, setAmount] = useState(0)
   const navigate = useNavigate()
 
-  const handleClick = ()=>{
-    console.log("initiating transfer")
-    console.log(localStorage.getItem("token"))
-    const token = localStorage.getItem("token")
+  // console.log("to user id", toUserId)
+  // console.log("to user name", toUserName)
 
-    axios.post(`${ DB_URL}/api/v1/account/transfer`,{
+  const handleClick = ()=>{
+    // console.log("initiating transfer")
+    // console.log(localStorage.getItem("token"))
+    const token = localStorage.getItem("token")
+    // const DB_URL = 'http://localhost:3000'
+    axios.post(`${DB_URL}/api/v1/account/transfer`,{
       toAccount : toUserId,
       transferAmount : amount
     }, {
@@ -27,11 +30,12 @@ export function SendMoney(){
       }
     })
     .then((response)=>{
-      console.log("the response from sending money is", response)
+      // console.log("the response from sending money is", response)
       navigate('/dashboard')
     })
     .catch((error)=>{
-      console.log("the error is", error)
+      alert(error.response.data.msg)
+      // console.log("the error is", error)
     })
   }
 

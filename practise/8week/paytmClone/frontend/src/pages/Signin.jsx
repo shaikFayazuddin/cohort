@@ -17,20 +17,21 @@ export function Signin(){
   const warningMessage = "New to PayTm, create an account"
 
   const handleSubmit = async()=>{
-    console.log("user is trying to sign in")
-    console.log(userName, password)
+    // console.log("user is trying to sign in")
+    // console.log(userName, password)
 
     await axios.post(`${DB_URL}/api/v1/user/signin`,{
       userName : userName,
       password : password
     })
     .then((response)=>{
-      console.log(response)
+      // console.log(response)
       localStorage.setItem("token", response.data.token)
       navigate("/dashboard")
     })
     .catch((error)=>{
-      console.log("the error is",error)
+      alert(error.response.data.msg)
+      // console.log("the error is",error)
     })
 
     

@@ -30,12 +30,12 @@ export function Signup() {
         password: password,
       })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         localStorage.setItem("token", response.data.token)
         navigate("/dashboard")
       })
       .catch(function (error) {
-        console.log(error);
+        alert(error.response.data.msg)
       });    
     
   };

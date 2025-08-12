@@ -50,6 +50,6 @@ const balanceSchema = new mongoose.Schema({
 })
 
 const PaytmUsers = mongoose.model("PaytmUsers", userSchema)
-const userBalance = mongoose.model("userBalance", balanceSchema)
+const UserBalance = mongoose.model("UserBalance", balanceSchema)
 
-module.exports = {PaytmUsers, userBalance}
+module.exports = {PaytmUsers, UserBalance}

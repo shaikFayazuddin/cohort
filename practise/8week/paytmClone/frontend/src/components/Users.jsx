@@ -15,7 +15,7 @@ export function Users({}){
     axios.get(`${DB_URL}/api/v1/user/bulk?filter=${filter}`).then(response=>setPaytmUsers(response.data.users))
   },[filter])
 
-  console.log("the fetched users are", paytmUsers)
+  // console.log("the fetched users are", paytmUsers)
   return <div>
     <InputBox onChange={e=>setFilter(e.target.value)} inputLabel={"Users"} inputPlaceholder={"Search Users"} inputType={"text"}></InputBox>
 
