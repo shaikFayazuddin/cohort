@@ -20,7 +20,7 @@ export function Signin(){
     console.log("user is trying to sign in")
     console.log(userName, password)
 
-    await axios.get(`${DB_URL}/api/v1/user/signin`,{
+    await axios.post(`${DB_URL}/api/v1/user/signin`,{
       userName : userName,
       password : password
     })
