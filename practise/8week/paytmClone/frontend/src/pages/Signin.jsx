@@ -36,7 +36,8 @@ export function Signin(){
 
     
   }
-  return <div>
+  return <div className="flex items-center justify-center h-screen bg-black">
+    <div className="border-2 border-black-500  bg-gray-950 text-white rounded-lg shadow-md flex flex-col justify-evenly items-center w-120 h-180 ">
     <Heading headingTitle={titleName}></Heading>
 
     <SubHeading subHeadingTitle={subHeading}></SubHeading>
@@ -49,5 +50,6 @@ export function Signin(){
 
     <FooterWarning warning={warningMessage} ref={"/signup"} anchorText={"Signup"}></FooterWarning>
 
+  </div>
   </div>
 }
