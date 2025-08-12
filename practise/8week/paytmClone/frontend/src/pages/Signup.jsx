@@ -41,7 +41,7 @@ export function Signup() {
   };
 
   return (
-    <div>
+    <div className="border-2 border-black-500  bg-amber-300 p-4 rounded-lg shadow-md flex items-center justify-center">
       <Heading headingTitle={titleName}></Heading>
 
       <SubHeading subHeadingTitle={subHeading}></SubHeading>
