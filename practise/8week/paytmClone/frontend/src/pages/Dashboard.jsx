@@ -7,7 +7,7 @@ import { useState } from "react";
 import axios from "axios";
 
 export function Dashboard(){
-  const [userName, setUserName] = useState("John")
+  const [userName, setUserName] = useState("Paytm User")
   const [userBalance, setUserBalance] = useState(0)
 
   const token = localStorage.getItem("token")

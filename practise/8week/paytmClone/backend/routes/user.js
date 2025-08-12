@@ -137,6 +137,7 @@ router.get("/bulk",  async (req,res)=>{
   // console.log("the filter is", filter)
 
   const filteredUsers = await PaytmUsers.find({
+    _id: { $ne: req.userId }, 
     $or : [
       {firstName : {"$regex" :filter}},
       {lastName : {"$regex" :filter}}
