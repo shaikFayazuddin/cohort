@@ -28,12 +28,14 @@ export function Dashboard(){
     })
   },[])
   // console.log("the user balance is", userBalance)
-  return <div>
+  return <div className="flex items-center justify-center h-screen bg-black">
+      <div className="border-2 border-black-500  bg-gray-950 text-white rounded-lg shadow-md flex flex-col justify-evenly items-center w-120 h-180 ">
     <AppBar appTitle={"PayTm app"} userName={userName}></AppBar>
 
     <Balance userBalance={userBalance}></Balance>
 
     <Users></Users>
 
+  </div>
   </div>
 }

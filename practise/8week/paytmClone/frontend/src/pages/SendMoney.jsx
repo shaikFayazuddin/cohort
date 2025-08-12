@@ -39,10 +39,12 @@ export function SendMoney(){
     })
   }
 
-  return <div>
+  return <div className="flex items-center justify-center h-screen bg-black">
+      <div className="border-2 border-black-500  bg-gray-950 text-white rounded-lg shadow-md flex flex-col justify-evenly items-center w-120 h-180 ">
     <h1>Send Money</h1>
     <h1>{toUserName}</h1>
     <InputBox onChange={e=>setAmount(e.target.value)} inputLabel={"Amount(in Rs)"} inputPlaceholder={"Enter Amount"} inputType={"text"}></InputBox>
     <Button buttonName={"Initiate Transfer"} onClick={handleClick} ></Button>
+  </div>
   </div>
 }
